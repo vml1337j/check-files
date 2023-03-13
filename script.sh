@@ -1,9 +1,9 @@
 #!/bin/bash
 
-declare -A interfaces=(["RU_TEST"]="10:00" ["RU_QWERTY"]="9:00" ["RU_ZZZ"]="6:00")
-#declare -A interfaces=(["RU_TEST"]="10:00")
+#declare -A interfaces=(["RU_TEST"]="10:00" ["RU_QWERTY"]="9:00" ["RU_ZZZ"]="6:00")
+declare -A interfaces=( ["RU_TEST"]="10:00" )
 
-path="/home/vml1337j/script"
+path="/Users/qwerty/IdeaProjects/check-files/interface-folder"
 
 #today_date=$(date  '+%Y%m%d')
 today_date=$(date '+%Y%m%d')
@@ -28,7 +28,8 @@ fi
 
 for interface in ${!interfaces[@]}
 do
-	if [ $(date -d"${interfaces[$interface]}" +%s) -lt $(date -d"$current_time" +%s) ]; then
+#	if [ $(date -d"${interfaces[$interface]}" +%s) -lt $(date -d"$current_time" +%s) ]; then
+	if [ $(date -jf "%H:%M" "${interfaces[$interface]}" +%s) -lt $(date -jf "%H:%M" "$current_time" +%s) ]; then
 
 		# Когда каталог есть, чтобы не сорить ошибками
 		if [ -d "$path/$interface/$today_date" ]; then
@@ -56,7 +57,6 @@ do
 					echo Folder size: $interface/$today_date $diff_bytes% >> $output_file
 				fi
 			else
-
 				# Выводим в файл что ничего не было загружено
 				echo $interface: $yesterday_date no files uploaded or size of folder is 0 >> $output_file
 			fi
